@@ -1,0 +1,35 @@
+# zf_mesh.inp: Generate surface mesh 
+# 	       Input: BOC data files
+#	       Output: Mesh triangles .txt file for VMD
+#	       	       	    	      *_norm.txt for surface normals
+#	       	       	    	      .stl file for MeshLab
+######################################################################
+
+img read type stack name wt_fixed_binary.dat tag iwt
+img3d build img iwt0:iwt55 tag iwt
+
+bead3d read name ./out/bwt.dat tag bwt img3d iwt
+
+fnet3d build tag fwt bead3d bwt
+fnet3d tag fwt do 
+       read name ./out/fwt.dat bead3d bwt
+       find_filament cyclic # save filament groups, allow cyclic
+#       write type psf+cor name ./out/fwt_mesh mode verbose
+       done
+
+surface build tag swt fnet3d fwt
+surface tag swt do
+	register_quads
+	register_pentagon
+	register_hexagon
+	register_missing
+	get_centroid
+	get_normal
+	draw_surface name ./out/fwt_quad color yellow mode verbose
+	done
+
+brain3d build tag brwt 
+brain3d write type stl ref_surf swt tag brwt name out/fwt
+
+STOP
+

@@ -1,0 +1,22 @@
+# zface1_gfp.inp: Build GFP bead model with weighed intensity
+#		  Input: GFP channel; wnt1 reporter
+# 		  Output: Bead files (*.psf, *.cor)
+######################################################################
+
+img read type stack name ace1_live_gfp.dat tag iag
+img3d tag iag do
+      build img iag0:iag49
+      shift dx 0 dy -5  # to match with full BOC
+      filter kind highpass mode absolute pxl_cut 30
+      remove_debris size_cut 100 pxl_cut 150 fill 0 mode area 
+      remove_debris size_cut 10 pxl_cut 200 fill 0 mode area        
+      #      write format png name out/iag	    
+      done
+
+bead3d build mode area size 6 img3d iag tag bag
+bead3d tag bag do
+       setz dz 1.8750 origin ini
+       write type cor+psf name ./out/bag mode verbose
+       done
+
+STOP 

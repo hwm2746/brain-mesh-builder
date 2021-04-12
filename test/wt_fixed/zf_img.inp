@@ -1,0 +1,37 @@
+# zf_img.inp: STAGE 1 --> Process image set from "Methods" section
+# 	      Input: Autofluorescence image set
+#	      Output: Binary (for use in zf_boc.inp)
+######################################################################
+
+img read type stack name wt_fixed.dat tag wt
+img3d tag wt do
+      build img wt0:wt55
+      shift dx 0 dy -5
+      filter kind gaussian sx 3 wy 3
+
+      filter kind highpass mode absolute pxl_cut 135 binary img wt0:wt6
+      filter kind highpass mode absolute pxl_cut 155 binary img wt7:wt42
+      filter kind highpass mode absolute pxl_cut 158 binary img wt43:wt52     
+      filter kind highpass mode absolute pxl_cut 155 binary img wt53:wt55
+
+      fill_region pixel_ini 162 64 wsize 2 foreground 255 background 0 \
+          img wt45:wt46 # mode edge
+      fill_region pixel_ini 162 64 wsize 3 foreground 255 background 0 \
+          img wt47:wt55 # mode edge
+   
+      invert
+      remove_debris size_cut 20 mode area img wt0:
+      remove_debris size_cut 3 mode rank img wt36:wt44
+      remove_debris size_cut 4 mode rank img wt45:wt49
+      remove_debris size_cut 3 mode rank img wt50:wt55
+      invert
+   
+      remove_debris size_cut 20 pxl_cut 0 fill 0 mode area
+
+      write format tif name binary/wt 
+      done
+
+STOP
+
+##############################
+# note: out/wt_* numbering begins at 0 (cf. image set, which begins at 1) 

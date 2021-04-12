@@ -1,0 +1,48 @@
+# zface1_img_vent.inp: Part of STAGE 1: Extract ventricle
+# 	    	       Input: Autofluoresence image set
+# 		       Output: Binary ventricle
+######################################################################
+
+img read type stack name ace1_live_merge.dat tag aut
+
+## copy aut to mb, hb
+img3d tag aut do
+      build img aut0:
+      copy save or # original
+      shift dx 0 dy -5 fill 255
+      filter kind gaussian sx 3 wx 3
+      copy save mb
+      copy save hb
+      done
+
+## midbrain
+img3d tag mb do
+      filter kind highpass mode absolute binary pxl_cut 40 img mb0:mb29
+      filter kind highpass mode absolute binary pxl_cut 30 img mb30:mb32
+      filter kind highpass mode absolute binary pxl_cut 25 img mb33:mb49
+      fill_region pixel_ini 136 53 mode region
+      invert
+      remove_debris size_cut 1 mode rank
+      invert
+      done
+
+## hindbrain 
+img3d tag hb do
+      filter kind highpass mode absolute binary pxl_cut 33 img hb0:hb21
+      filter kind highpass mode absolute binary pxl_cut 30 img hb22:hb25      
+      filter kind highpass mode absolute binary pxl_cut 26 img hb26:hb29
+      filter kind highpass mode absolute binary pxl_cut 24 img hb30:hb47
+      filter kind highpass mode absolute binary pxl_cut 20 img hb48:hb49   
+      fill_region pixel_ini 0 0 foreground 0 background 0 img hb0:hb15 # no vent
+      fill_region pixel_ini 116 168  mode region img hb16:hb49 
+      invert
+      remove_debris size_cut 1 mode rank
+      invert      
+      done
+
+img3d tag hb merge from_tag mb28 to_tag mb42 img hb28:hb42
+img3d tag hb write format tif name binary/vent_mhb
+
+img3d write format emap name ./out/vent_mhb dimension 1. 1. -1.8750 tag hb 
+
+STOP

@@ -1,0 +1,34 @@
+#centerline 
+draw color gray 
+draw line { 123.0000    0.0000   41.2500} { 126.0000  255.0000   41.2500} width 2
+draw color blue 
+draw sphere { 123.0000   70.8333   41.2500}
+draw sphere { 123.0000   73.6667   41.2500}
+draw sphere { 123.0000   76.5000   41.2500}
+draw sphere { 123.0000   79.3333   41.2500}
+draw sphere { 123.0000   82.1667   41.2500}
+draw sphere { 123.0000   85.0000   41.2500}
+
+#width lines
+draw line { 149.1652   70.8333   41.2500} { 120.5357   70.8333   41.2500} width 3 
+draw line { 149.6933   73.6667   41.2500} { 117.8693   73.6667   41.2500} width 3 
+draw line { 148.5264   76.5000   41.2500} { 117.3277   76.5000   41.2500} width 3 
+draw line { 145.5522   79.3333   41.2500} { 117.5153   79.3333   41.2500} width 3 
+draw line { 141.8680   82.1667   41.2500} { 118.5336   82.1667   41.2500} width 3 
+draw line { 138.6709   85.0000   41.2500} { 120.9398   85.0000   41.2500} width 3 
+
+#width measurements
+##   28.6295
+##   31.8240
+##   31.1987
+##   28.0369
+##   23.3344
+##   17.7311
+
+ #get axis block
+draw sphere { 134.8505   70.8333   41.2500} radius 2
+draw sphere { 133.7813   73.6667   41.2500} radius 2
+draw sphere { 132.9271   76.5000   41.2500} radius 2
+draw sphere { 131.5337   79.3333   41.2500} radius 2
+draw sphere { 130.2008   82.1667   41.2500} radius 2
+draw sphere { 129.8053   85.0000   41.2500} radius 2

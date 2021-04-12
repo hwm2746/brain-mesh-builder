@@ -1,0 +1,20 @@
+# zface1_measure.inp: Measure ventricle structure
+# 		      Input: BOC data files (ventricle)
+#		      Output: Oriented structure, measurements
+######################################################################
+
+img read type stack name ace1_live_binary_vent.dat tag iav
+img3d build img iav0: tag iav
+
+bead3d read name ./out/bav.dat tag bav img3d iav
+bead3d orient tol 0.01 tag bav to y
+
+fnet3d build tag fav bead3d bav
+fnet3d read name ./out/fav.dat bead3d bav tag fav
+fnet3d write type psf+cor name ./out/fav_orie tag fav mode verbose
+
+brain3d build tag brwv
+brain3d anal_zf_vent fnet3d_tag fav dz 2 nslice 70 tag brwv \
+	pt 110 212.4 52.5 100.7 121.5 61.9 100.3 80.7 30
+
+STOP

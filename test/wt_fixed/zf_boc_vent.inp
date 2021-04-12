@@ -1,0 +1,48 @@
+# zf_boc_vent.inp: Build BOC of WT embryo ventricle
+# 		   Input: Extracted binary ventricles
+#		   Output: Model structure files (*.psf,*.cor)
+#	      	   Readable data file (*.dat)
+######################################################################
+
+img read type stack name wt_fixed_binary_vent.dat tag ivt
+img3d build img ivt0: tag ivt
+
+fnet3d build img3d ivt tag fvt size 4 contour
+fnet3d tag fvt do
+       setz dz 1.8750 origin ini
+       smoothen_average
+       equalize_bond
+       join_cyclic_fil rcut 2.5 
+       clean_filaments
+       assign_bond_z rcut 1.
+       prune_bond_z
+
+       fill_enclosed_hole
+       assign_bond_z rcut 1.
+       prune_bond_z
+       fill_enclosed_hole
+       assign_bond_z rcut 1.
+       prune_bond_z
+
+       smoothen_z seglength 3 delZ 2 rCut 3
+       assign_bond_z rcut 1.
+       prune_bond_z
+       smoothen_z seglength 3 delz 2 rcut 3 # refine leftovers
+       assign_bond_z rcut 5. new_only # try to bond large openings
+       prune_bond_z
+       fill_enclosed_hole
+       
+       clear_bond_z
+       smoothen_average # smoothen 2D after 3d smoothing
+       equalize_bond
+       assign_bond_z rcut 2 
+       prune_bond_z
+       fill_enclosed_hole
+       assign_bond_z rcut 1.5 new_only
+       prune_bond_z
+       remove_unzbonded_beads
+
+       write type psf+cor name ./out/fvt mode verbose
+       write type dat name ./out/fvt bd_name out/bvt 
+       done
+stop

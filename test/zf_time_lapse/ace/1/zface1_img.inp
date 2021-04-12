@@ -1,0 +1,39 @@
+# zface1_img.inp: STAGE 1 --> Process live zebrafish embryo
+# 	    	  Input: Merged binary image
+#		  Output: Binary image (for use in zface1_boc.inp)
+######################################################################
+
+img read type stack name ace1_live_merge.dat tag iaa
+img3d tag iaa do
+      build img iaa0:
+      shift dx 0 dy -5
+      filter kind gaussian sx 3 wy 3
+      
+      filter kind highpass mode absolute pxl_cut 45 binary img iaa0:iaa30
+      filter kind highpass mode absolute pxl_cut 40 binary img iaa31:iaa37
+      filter kind highpass mode absolute pxl_cut 35 binary img iaa38:iaa41   
+      filter kind highpass mode absolute pxl_cut 25 binary img iaa42:iaa49
+
+      copy save cp
+      fill_region pixel_ini 119 93 pixel_fin 99 87 wsize 2 \
+   	       foreground 255 background 0
+      done
+
+##########
+# add in segments that were cut out
+img3d tag cp fill_region pixel_ini 161 74 wsize 2 \
+  	     foreground 255 background 0 
+img3d tag iaa merge from_tag cp31 to_tag cp49 img iaa31:iaa49
+
+##########
+# remove debris
+img3d tag iaa do
+      invert
+      remove_debris size_cut 20 mode area fill 0 img iaa0:
+      remove_debris size_cut 50 mode area fill 0 img iaa30:iaa41
+      remove_debris size_cut 40 mode area fill 0 img iaa42:iaa49
+      invert
+      write format tif name binary/iaa
+      done
+
+STOP
