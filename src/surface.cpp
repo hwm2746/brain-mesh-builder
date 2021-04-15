@@ -449,6 +449,54 @@ void surface::registerMissingSurf()
     } //      for (jbd=0;jbd<fnet_stack[jstk].nBead;jbd++) {
   } //    for (istk=fn3d_id_vec[0];istk<fn3d_id_vec[1];istk++) {
 
+  // other side check
+  iQuad=nQuad;   
+  for (istk=fn3d_id_vec[0]+1;istk<=fn3d_id_vec[1];istk++) {
+    jstk=istk-1;
+    for (jbd=0;jbd<fnet_stack[jstk].nBead;jbd++) {
+      if (it_fnet3d->bond_a[jstk].find(jbd)==it_fnet3d->bond_a[jstk].end()) {
+	zEnds.clear();	jSeq.clear();
+	jFil=fnet_stack[jstk].bead_fil.find(jbd)->second;
+	it_fnet3d->findNextZ(jstk,jbd,jFil,istk,zEnds);
+	if ((int)zEnds.size()!=2) continue ; // to save ENCLOSED region
+	
+	// verify and save istk z-bond ends  (use same beads for this sequence)
+	if (it_fnet3d->bond_a[jstk].count(zEnds[0])!=1 ||
+	    it_fnet3d->bond_a[jstk].count(zEnds[1])!=1) continue;  // skip issues
+	ibd0=it_fnet3d->bond_a[jstk].find(zEnds[0])->second; 
+	ibd1=it_fnet3d->bond_a[jstk].find(zEnds[1])->second;
+	if (!fnet_stack[istk].isBonded(ibd0,ibd1)) continue; 				       
+	if (it_fnet3d->bond_b[istk].find(ibd0)->second != zEnds[0] ||
+	    it_fnet3d->bond_b[istk].find(ibd1)->second != zEnds[1]) continue;  
+	if (fnet_stack[istk].bead_fil.find(ibd0)->second !=
+	    fnet_stack[istk].bead_fil.find(ibd1)->second) 	
+	it_fnet3d->trackFilSeq(jstk,zEnds[0],zEnds[1],jSeq);
+
+	for (i=0;i<(int)jSeq.size()-1;i++) { 
+	  jbd0=jSeq[i]; jbd1=jSeq[i+1]; 
+	  quadbeads.at(0)=iQuad;
+	  quadbeads.at(1)=jbd0; quadbeads.at(2)=jbd1;
+	  quadbeads.at(3)=ibd0; quadbeads.at(4)=ibd1;	
+	  if (!checkDuplicateQuad(jstk,quadbeads)) {
+	    addOneQuad(jstk,quadbeads);
+	    iQuad++; 
+	  }
+	} // 	for (i=0;i<(int)jSeq.size()-1;i++) {
+
+	for (i=0;i<(int)jSeq.size()-1;i++) { 
+	  jbd0=jSeq[i]; jbd1=jSeq[i+1]; 
+	  quadbeads.at(0)=iQuad;
+	  quadbeads.at(1)=jbd1; quadbeads.at(2)=jbd0;
+	  quadbeads.at(3)=ibd0; quadbeads.at(4)=ibd1;	
+	  if (!checkDuplicateQuad(jstk,quadbeads)) {
+	    addOneQuad(jstk,quadbeads);
+	    iQuad++; 
+	  }
+	} // 	for (i=0;i<(int)jSeq.size()-1;i++) {
+      } //       if (it_fnet3d->bond_a[jstk].find(jbd)==it_fnet3d->bond_a[jstk].end()) {
+    } //     for (jbd=0;jbd<fnet_stack[jstk].nBead;jbd++) {
+  } //   for (istk=fn3d_id_vec[0]+1;istk<=fn3d_id_vec[1];istk++) {
+  
   cout<<"  register_missing: "<<nQuad-nQuadold<<
     " quadrilaterals added"<<endl;   
   return; 
