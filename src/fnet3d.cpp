@@ -955,6 +955,8 @@ void fnet3d::measureWidth3D(int N, double arr[], int nslice,string ofname,
   for (j=0;j<2;j++) pos[j]=new double[totBead];
   bd_mass=new double[totBead]; 
 
+  for (i=0;i<totBead;i++) bd_mass[i]=1.; 
+  
   ib=0; 
   for (istk=id_vec[0];istk<=id_vec[1];istk++) {
     if (!fnet_stack[istk].nBead) continue; // skip if no beads    
@@ -963,8 +965,11 @@ void fnet3d::measureWidth3D(int N, double arr[], int nslice,string ofname,
       ++ib;
     }
   }
-  for (j=0;j<2;j++) 
+  for (j=0;j<2;j++)  {
     getavgw(&bm[j],&sig,pos[j],bd_mass,totBead);  // centroid
+    cout<<"getavgw:"<<bm[0]<<" " <<bm[1]<<endl; 
+  }
+
   
   if (ax0=="x") MinMax(totBead,pos[0],&imin,&imax,&min,&max); 
   else if (ax0=="y")  MinMax(totBead,pos[1],&imin,&imax,&min,&max);

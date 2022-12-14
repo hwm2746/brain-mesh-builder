@@ -6,11 +6,14 @@
 
 * How to cite:
 
-Title: Building 3-Dimensional Model of Early-Stage Zebrafish Embryo Midbrain-Hindbrain Boundary
+Title: Building a three-dimensional model of early-stage zebrafish embryo brain
 
 Authors: Ana C. Chang-Gonzalez, Holly C. Gibbs, Arne C. Lekven, Alvin T. Yeh, and Wonmuk Hwang
 
-TO BE PUBLISHED (2021).
+Journal: Biophysical Reports, Volume 1, Issue 1. 100003
+
+Year: 2021
+
 
 ----------------------------------------------------------------------
 ----------------------------------------------------------------------
