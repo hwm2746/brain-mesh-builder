@@ -965,10 +965,8 @@ void fnet3d::measureWidth3D(int N, double arr[], int nslice,string ofname,
       ++ib;
     }
   }
-  for (j=0;j<2;j++)  {
+  for (j=0;j<2;j++)  
     getavgw(&bm[j],&sig,pos[j],bd_mass,totBead);  // centroid
-    cout<<"getavgw:"<<bm[0]<<" " <<bm[1]<<endl; 
-  }
 
   
   if (ax0=="x") MinMax(totBead,pos[0],&imin,&imax,&min,&max); 

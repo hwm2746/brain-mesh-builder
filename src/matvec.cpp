@@ -406,7 +406,6 @@ void getavgw(double *avg, double *sig, double ia[], double weight[], int N)
   int i; double a, b, wt=0., rdum;
   a=b=0;
   for (i=0;i<N;i++) {
-    cout<<"weight:"<<weight[i]<<endl; 
     wt+=weight[i];  rdum=ia[i];
     a+=rdum*weight[i]; b+=rdum*rdum*weight[i];
   }
